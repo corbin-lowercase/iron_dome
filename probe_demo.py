@@ -5,7 +5,7 @@ def main():
     # Create an object from the Probe class
     my_probe = probe.Probe()
     # User inputs probe variables
-    my_probe.mass = input('Probe mass: ')
+    #my_probe.mass = input('Probe mass: ')
     my_probe.planet = 'Earth'
     # my_probe.dimension_x = input('Probe size (x): ')
     # my_probe.dimension_y = input('Probe size (y): ')
