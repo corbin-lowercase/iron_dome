@@ -88,21 +88,22 @@ class Probe:
             f'({round(x[0], 2)}, {round(y[0], 2)}, {round(z[0], 2)})',
             f'({round(x[-1], 2)}, {round(y[-1], 2)}, {round(z[-1], 2)})'
             ]
-        # Store launch and landing points.
+        # Store launch and landing point.
         x_points = [x[0], x[-1]]
         y_points = [y[0], y[-1]]
         z_points = [z[0], z[-1]]
-
+        # Loop through launch and landing point to label them on plot.
         for x_point, y_point, z_point, label in zip(
             x_points, y_points, z_points, labels
         ):
+            # This sets label position and style.
             ax.text(
                 x_point + abs(x[-1]/20),
                 y_point - y[-1]/10, 
                 z_point + z[-1]/10, 
                 label, 
                 fontsize=10, color='black')
-
+        # Set plot styles.
         ax.set_xlabel('x Distance (m)', alpha=0.5)
         ax.set_ylabel('y Distance (m)', alpha=0.5)
         ax.set_zlabel('z Altitude (m)', alpha=0.5)
@@ -111,7 +112,4 @@ class Probe:
         ax.legend()
         ax.grid(True)
 
-        
         plt.show()
-
-
