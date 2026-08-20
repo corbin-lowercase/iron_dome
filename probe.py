@@ -47,10 +47,15 @@ class Probe:
         flight_time = (2 * self.velocity_z_initial) / self.GRAVITY
         print(f'Flight time: {round(flight_time, 2)} seconds')
 
-        # Generate time steps
-        dt = flight_time / 1000
-        print(dt)
-        time_steps = np.linspace(0, flight_time, 1000)
+
+
+        # # Generate time steps
+        time_steps = np.arange(0, flight_time, 0.05)
+        time_steps = np.append(time_steps, flight_time)
+
+        # dt = flight_time / 1000
+        # print(dt)
+        # time_steps = np.linspace(0, flight_time, 1000)
 
         # Calculate 3D trajectory with numpy arrays.
         x = (self.position_x + self.velocity_x_initial * time_steps)
