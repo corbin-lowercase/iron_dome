@@ -66,9 +66,9 @@ class Probe:
         z_displacement_gravity = 0.5 * self.GRAVITY * (time_steps)**2
         z = abs(self.position_z + z_displacement - z_displacement_gravity)
 
-        return x, y, z, flight_time
+        return x, y, z
 
-    def plot(x, y, z, flight_time):
+    def plot(self, x, y, z):
 
         # Plot the 3D path.
         fig = plt.figure(figsize=(8, 8))
@@ -117,3 +117,25 @@ class Probe:
         ax.grid(True)
 
         plt.show()
+
+def main():
+    # Create an object from the Probe class
+    my_probe = Probe()
+
+    # User inputs probe variables
+    # my_probe.mass = input('Probe mass: ')
+    # my_probe.dimension_x = input('Probe size (x): ')
+    # my_probe.dimension_y = input('Probe size (y): ')
+    # my_probe.dimension_z = input('Probe size (z): ')
+
+    # Launch probe
+    x_values, y_values, z_values = my_probe.launch()
+    my_probe.plot(x_values, y_values, z_values)
+    
+    # Display intial velocities
+    # print(f'Vx: {my_probe.velocity_x_initial}')
+    # print(f'Vy: {my_probe.velocity_y_initial}')
+    # print(f'Vz: {my_probe.velocity_z_initial}')
+
+if __name__ == '__main__':
+    main()

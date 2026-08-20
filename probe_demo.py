@@ -9,9 +9,8 @@ def main():
     # my_probe.dimension_x = input('Probe size (x): ')
     # my_probe.dimension_y = input('Probe size (y): ')
     # my_probe.dimension_z = input('Probe size (z): ')
-
     # Launch probe
-    my_probe.launch()
+    projectile = my_probe.launch()
 
     # Display intial velocities
     # print(f'Vx: {my_probe.velocity_x_initial}')
