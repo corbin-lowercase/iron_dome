@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 class Probe:
 
-    GRAVITY = -9.81
+    GRAVITY = 9.81
 
     # Initialize mass, dimensions, and position with values of 0.
     def __init__(self):
@@ -25,15 +25,15 @@ class Probe:
 
     # The launch method launches the probe at a random trajectory.
     def launch(self):
-        # Randomly generate the velocity components to 4 decimal places.
-        self.velocity_x_initial = round(random.uniform(-10000.0, 10000.0), 4)
-        self.velocity_y_initial = round(random.uniform(-10000.0, 10000.0), 4)
-        self.velocity_z_initial = round(random.uniform(0.01, 100000.0), 4)
+        # Randomly generate the velocity components.
+        self.velocity_x_initial = random.uniform(-10000.0, 10000.0)
+        self.velocity_y_initial = random.uniform(-10000.0, 10000.0)
+        self.velocity_z_initial = random.uniform(0.01, 100000.0)
 
         # Calculate magnitude of velocity vector.
-        self.velocity_initial = round(math.hypot(self.velocity_x_initial,
+        self.velocity_initial = math.hypot(self.velocity_x_initial,
                                           self.velocity_y_initial,
-                                          self.velocity_z_initial), 4)
+                                          self.velocity_z_initial)
 
         # Calculate the angle theta above the horizontal.
         self.launch_angle_theta = math.acos(self.velocity_z_initial / 
@@ -44,18 +44,20 @@ class Probe:
                                            self.velocity_x_initial)
 
         # Calculate the total flight time.
-        flight_time = round(-(2 * self.velocity_z_initial) / self.GRAVITY, 4)
-        print(f'Flight time: {flight_time} seconds')
+        flight_time = (2 * self.velocity_z_initial) / self.GRAVITY
+        print(f'Flight time: {round(flight_time, 2)} seconds')
 
-        # Generate 100 time steps.
-        time_steps = np.linspace(0, flight_time, 100)
+        # Generate time steps
+        dt = flight_time / 1000
+        print(dt)
+        time_steps = np.linspace(0, flight_time, 1000)
 
         # Calculate 3D trajectory with numpy arrays.
         x = (self.position_x + self.velocity_x_initial * time_steps)
         y = (self.position_y + self.velocity_y_initial * time_steps)
         # The final z position should be zero.
-        z = abs((0.5 * self.GRAVITY * (time_steps)**2 -
-             self.position_z + self.velocity_z_initial * (time_steps)))
+        z = abs(self.position_z + (self.velocity_z_initial * time_steps) - (
+            0.5 * self.GRAVITY * (time_steps)**2))
 
         # Plot the 3D path.
         fig = plt.figure(figsize=(8, 8))
