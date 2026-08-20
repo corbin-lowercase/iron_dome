@@ -66,6 +66,10 @@ class Probe:
         z_displacement_gravity = 0.5 * self.GRAVITY * (time_steps)**2
         z = abs(self.position_z + z_displacement - z_displacement_gravity)
 
+        return x, y, z, flight_time
+
+    def plot(x, y, z, flight_time):
+
         # Plot the 3D path.
         fig = plt.figure(figsize=(8, 8))
         # 111 means 1 row in the grid, 1 column in the grid, and the
