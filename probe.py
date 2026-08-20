@@ -25,15 +25,15 @@ class Probe:
 
     # The launch method launches the probe at a random trajectory.
     def launch(self):
-        # Randomly generate the velocity components to 2 decimal places.
-        self.velocity_x_initial = round(random.uniform(-10.0, 10.0), 2)
-        self.velocity_y_initial = round(random.uniform(-10.0, 10.0), 2)
-        self.velocity_z_initial = round(random.uniform(0.01, 10.0), 2)
+        # Randomly generate the velocity components to 4 decimal places.
+        self.velocity_x_initial = round(random.uniform(-10000.0, 10000.0), 4)
+        self.velocity_y_initial = round(random.uniform(-10000.0, 10000.0), 4)
+        self.velocity_z_initial = round(random.uniform(0.01, 100000.0), 4)
 
         # Calculate magnitude of velocity vector.
         self.velocity_initial = round(math.hypot(self.velocity_x_initial,
                                           self.velocity_y_initial,
-                                          self.velocity_z_initial), 2)
+                                          self.velocity_z_initial), 4)
 
         # Calculate the angle theta above the horizontal.
         self.launch_angle_theta = math.acos(self.velocity_z_initial / 
@@ -44,7 +44,7 @@ class Probe:
                                            self.velocity_x_initial)
 
         # Calculate the total flight time.
-        flight_time = round(-(2 * self.velocity_z_initial) / self.GRAVITY, 2)
+        flight_time = round(-(2 * self.velocity_z_initial) / self.GRAVITY, 4)
         print(f'Flight time: {flight_time} seconds')
 
         # Generate 100 time steps.
@@ -52,13 +52,10 @@ class Probe:
 
         # Calculate 3D trajectory with numpy arrays.
         x = (self.position_x + self.velocity_x_initial * time_steps)
-        print(x)
         y = (self.position_y + self.velocity_y_initial * time_steps)
-        print(y)
         # The final z position should be zero.
-        z = (0.5 * self.GRAVITY * (time_steps)**2 -
-             self.position_z + self.velocity_z_initial * (time_steps))
-        print(z)
+        z = abs((0.5 * self.GRAVITY * (time_steps)**2 -
+             self.position_z + self.velocity_z_initial * (time_steps)))
 
         # Plot the 3D path.
         fig = plt.figure(figsize=(8, 8))
@@ -67,23 +64,40 @@ class Probe:
         ax = fig.add_subplot(111, projection='3d')
 
         # Plot the trajectory
-        ax.plot(x, y, z, label='Projectile Path', color='black', lw=2)
+        ax.plot(x, y, z, label='Trajectory', color='black', lw=1.5, alpha=0.5)
         ax.scatter(x[0], y[0], z[0], color = 'green', marker='o', s=30, 
                    label='Launch Point')
         ax.scatter(x[-1], y[-1], z[-1], color='crimson', marker='x', s=50, 
                    label='Landing Point')
 
         # Set labels and adjust styling of plots.
-        labels = [f'({x[0]}, {y[0]}, {z[0]})', f'({x[-1]}, {y[-1]}, {z[-1]})']
-        for i in range(2):
-            plt.annotate(
-                labels[i],
+        labels = [f'({round(x[0], 2)}, {round(y[0], 2)}, {round(z[0], 2)})', 
+                  f'({round(x[-1], 2)}, {round(y[-1], 2)}, {round(z[-1], 2)})']
 
-            )
-        ax.set_xlabel('x Distance (m)')
-        ax.set_ylabel('y Distance (m)')
-        ax.set_zlabel('z Altitude (m)')
+        x_points = [x[0], x[-1]]
+        y_points = [y[0], y[-1]]
+        z_points = [z[0], z[-1]]
+
+        for x_point, y_point, z_point, label in (
+            zip(
+                x_points, 
+                y_points, 
+                z_points, 
+                labels
+                )
+        ):
+            ax.text(
+                x_point + abs(x[-1]/20),
+                y_point - y[-1]/10, 
+                z_point + z[-1]/10, 
+                label, 
+                fontsize=10, color='black')
+
+        ax.set_xlabel('x Distance (m)', alpha=0.5)
+        ax.set_ylabel('y Distance (m)', alpha=0.5)
+        ax.set_zlabel('z Altitude (m)', alpha=0.5)
         ax.set_title('3D Projectile Motion')
+        ax.tick_params(axis='both', colors=(0, 0, 0, 0.5))
         ax.legend()
         ax.grid(True)
 
@@ -91,24 +105,3 @@ class Probe:
         plt.show()
 
 
-# # 1. Define coordinates for two points
-# x = [2, 5]
-# y = [4, 9]
-# labels = ['Point A', 'Point B']
-
-# # 2. Plot the points
-# plt.scatter(x, y, color='red', s=100)
-
-# # 3. Label each point using a loop
-# for i in range(2):
-#     plt.annotate(
-#         labels[i],                      # Text label
-#         (x[i], y[i]),                   # (x, y) coordinates of the point
-#         textcoords="offset points",     # How to interpret xytext
-#         xytext=(10, 10),                # Distance from point (x offset, y offset)
-#         ha='center'                     # Horizontal alignment ('center', 'left', 'right')
-#     )
-
-# # Set window limits to view labels clearly
-# plt.xlim(0, 8)
-# plt.ylim(0, 12)
