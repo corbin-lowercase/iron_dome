@@ -135,14 +135,23 @@ class Projectile:
         )
 
         # Set labels and adjust styling of plots.
+        x_intitial = f'{round(x[0], 3):,}'
+        y_intitial = f'{round(y[0], 3):,}'
+        z_intitial = f'{round(z[0], 3):,}'
         labels = [
             f'({round(x[0], 3):,}, {round(y[0], 3):,}, {round(z[0], 3):,})',
-            f'({round(x[-1], 3):,}, {round(y[-1], 3):,}, {round(z[-1], 3):,})'
-            ]
-        # Store launch and landing point.
-        x_points = [x[0], x[-1]]
-        y_points = [y[0], y[-1]]
-        z_points = [z[0], z[-1]]
+            f'({round(x[-1], 3):,}, {round(y[-1], 3):,}, {round(z[-1], 3):,})',
+            f'(
+            {round(apex[0], 3):,}, 
+            {round(apex[1], 3):,}, 
+            {round(apex[0], 3):,},)
+            ']
+        
+        # Store launch point, landing point, and apex.
+        x_points = [x[0], x[-1], apex[0]]
+        y_points = [y[0], y[-1], apex[1]]
+        z_points = [z[0], z[-1], apex[2]]
+        print(x_points)
         # Loop through launch and landing point to label them on plot.
         for x_point, y_point, z_point, label in zip(
             x_points, y_points, z_points, labels
