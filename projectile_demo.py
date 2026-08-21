@@ -3,7 +3,7 @@ import projectile
 
 def main():
     # Create an object from the Probe class
-    my_projecitle = projectile.Projectile()
+    my_projectile = projectile.Projectile()
 
     # User inputs probe variables
     # my_probe.mass = input('Probe mass: ')
