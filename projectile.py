@@ -29,10 +29,14 @@ class Projectile:
     # The launch method launches the projectile at a random trajectory.
     def launch(self):
         # Randomly generate the velocity components.
-        self.velocity_x_initial = random.uniform(-1000, 1000)
-        self.velocity_y_initial = random.uniform(-1000, 1000)
-        self.velocity_z_initial = random.uniform(100, 1000)
+        # self.velocity_x_initial = random.uniform(-1000, 1000)
+        # self.velocity_y_initial = random.uniform(-1000, 1000)
+        # self.velocity_z_initial = random.uniform(100, 1000)
 
+        ### For testing with smaller values
+        self.velocity_x_initial = random.uniform(-1, 1)
+        self.velocity_y_initial = random.uniform(-1, 1)
+        self.velocity_z_initial = random.uniform(1, 10)
         # Calculate magnitude of velocity vector.
         self.velocity_initial = math.hypot(self.velocity_x_initial,
                                           self.velocity_y_initial,
@@ -64,7 +68,7 @@ class Projectile:
             )
         
         # Generate the time steps with dt=0.05 and append last step.
-        time_steps = np.arange(0, flight_time, 0.05)
+        time_steps = np.arange(0, flight_time, 0.01)
         time_steps = np.append(time_steps, flight_time)
 
         # Calculate 3D positional coordinates for x, y, z. 
@@ -78,6 +82,11 @@ class Projectile:
         z_displacement = self.velocity_z_initial * time_steps
         z_displacement_gravity = 0.5 * self.GRAVITY * (time_steps)**2
         self.z = abs(self.position_z + z_displacement - z_displacement_gravity)
+
+        # Combine 1D positional arrays with dt array.
+        self.projectile_coords = np.column_stack(
+            (self.x, self.y, self.z, time_steps)
+        )
 
     # The plot method takes return values from launch method and plots
     # the projectile's trajectory in 3D space.
@@ -100,7 +109,11 @@ class Projectile:
             y = self.y / 1000
             z = self.z / 1000
             apex = tuple(val / 1000 for val in self.apex)
-
+        else:
+            x = self.x
+            y = self.y
+            z = self.z
+            apex = self.apex
         # Graph the trajectory and plot launch point and landing point.
         ax.plot(x, y, z, label='Trajectory', color='crimson', lw=1.5, alpha=0.5)
         ax.scatter(

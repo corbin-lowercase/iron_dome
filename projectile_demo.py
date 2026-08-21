@@ -13,6 +13,7 @@ def main():
 
     # Launch probe
     my_projectile.launch()
+    print(my_projectile.projectile_coords)
     my_projectile.plot()
 
     # Display intial velocities
