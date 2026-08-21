@@ -55,14 +55,20 @@ class Projectile:
         self.max_x_displacement = self.velocity_x_initial * flight_time
         self.max_y_displacement = self.velocity_y_initial * flight_time
         self.max_z_displcaement = 0.5 * self.GRAVITY * (flight_time / 2)**2
-        print(self.max_z_displcaement)
 
+        # Calculate the apex of flight path.
+        self.apex = (
+            self.max_x_displacement / 2,
+            self.max_y_displacement / 2,
+            self.max_z_displcaement
+            )
+        
         # Generate the time steps with dt=0.05 and append last step.
         time_steps = np.arange(0, flight_time, 0.05)
         time_steps = np.append(time_steps, flight_time)
 
-        # Calculate 3D trajectory for x, y, z. NumPy arrays are
-        # calculated all at once for each variable.
+        # Calculate 3D positional coordinates for x, y, z. 
+        # NumPy arrays are calculated all at once for each variable.
         x_displacement = self.velocity_x_initial * time_steps
         self.x = (self.position_x + x_displacement)
 
@@ -93,16 +99,26 @@ class Projectile:
             x = self.x / 1000
             y = self.y / 1000
             z = self.z / 1000
+            apex = tuple(val / 1000 for val in self.apex)
 
         # Graph the trajectory and plot launch point and landing point.
         ax.plot(x, y, z, label='Trajectory', color='crimson', lw=1.5, alpha=0.5)
         ax.scatter(
-            x[0], y[0], z[0], color = 'crimson', marker='o', s=30, 
+            x[0], y[0], z[0], color = 'crimson', marker='^', s=30, 
             label='Launch Point'
         )
         ax.scatter(
             x[-1], y[-1], z[-1], color='crimson', marker='x', s=50, 
             label='Landing Point'
+        )
+
+        # Plot the apex of the trajectory.
+        ax.scatter(
+            *apex,
+            color = 'crimson', 
+            marker = 'o',
+            s=30,
+            label='Apex'
         )
 
         # Set labels and adjust styling of plots.
@@ -120,7 +136,7 @@ class Projectile:
         ):
             # This sets label position and style.
             ax.text(
-                x_point + abs(x[-1]/20),
+                x_point + abs(x[-1]/20),  # After operator is offset.
                 y_point - y[-1]/10, 
                 z_point + z[-1]/10, 
                 label, 
