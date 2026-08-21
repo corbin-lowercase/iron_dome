@@ -29,14 +29,14 @@ class Probe:
     # The launch method launches the probe at a random trajectory.
     def launch(self):
         # Randomly generate the velocity components.
-        self.velocity_x_initial = random.uniform(-10000.0, 10000.0)
-        self.velocity_y_initial = random.uniform(-10000.0, 10000.0)
-        self.velocity_z_initial = random.uniform(0.01, 100000.0)
+        self.velocity_x_initial = random.uniform(-100000, 100000)
+        self.velocity_y_initial = random.uniform(-100000, 100000)
+        self.velocity_z_initial = random.uniform(1000, 10000)
 
         # Calculate magnitude of velocity vector.
         self.velocity_initial = math.hypot(self.velocity_x_initial,
                                           self.velocity_y_initial,
-                                          self.velocity_z_initial)
+                                          self.velocity_z_initial) 
 
         # Calculate the angle theta above the horizontal.
         self.launch_angle_theta = math.acos(self.velocity_z_initial 
@@ -47,8 +47,15 @@ class Probe:
                                            self.velocity_x_initial)
 
         # Calculate the total flight time from launch to landing.
-        flight_time = (2 * self.velocity_z_initial) / self.GRAVITY
+        self.flight_time = (2 * self.velocity_z_initial) / self.GRAVITY
+        flight_time = self.flight_time   
         print(f'Flight time: {round(flight_time, 2)} seconds')
+
+        # Calculate the max x, y, and z displacement of the projectile.
+        self.max_x_displacement = self.velocity_x_initial * flight_time
+        self.max_y_displacement = self.velocity_y_initial * flight_time
+        self.max_z_displcaement = 0.5 * self.GRAVITY * (flight_time / 2)**2
+        print(self.max_z_displcaement)
 
         # Generate the time steps with dt=0.05 and append last step.
         time_steps = np.arange(0, flight_time, 0.05)
@@ -71,15 +78,15 @@ class Probe:
     def plot(self, x, y, z):
 
         # Plot the 3D path.
-        fig = plt.figure(figsize=(8, 8))
+        fig = plt.figure(figsize=(7, 7))
         # 111 means 1 row in the grid, 1 column in the grid, and the
         # index(1) of subplot being activated.
         ax = fig.add_subplot(111, projection='3d')
 
-        # Graph the trajectory and plot launch and landing point.
-        ax.plot(x, y, z, label='Trajectory', color='black', lw=1.5, alpha=0.5)
+        # Graph the trajectory and plot launch point and landing point.
+        ax.plot(x, y, z, label='Trajectory', color='crimson', lw=1.5, alpha=0.5)
         ax.scatter(
-            x[0], y[0], z[0], color = 'green', marker='o', s=30, 
+            x[0], y[0], z[0], color = 'crimson', marker='o', s=30, 
             label='Launch Point'
         )
         ax.scatter(
@@ -88,9 +95,11 @@ class Probe:
         )
 
         # Set labels and adjust styling of plots.
+        if self.max_x_displacement >= 1000000:
+            
         labels = [
-            f'({round(x[0], 2)}, {round(y[0], 2)}, {round(z[0], 2)})',
-            f'({round(x[-1], 2)}, {round(y[-1], 2)}, {round(z[-1], 2)})'
+            f'({round(x[0], 2):,}, {round(y[0], 2):,}, {round(z[0], 2):,})',
+            f'({round(x[-1], 2):,}, {round(y[-1], 2):,}, {round(z[-1], 2):,})'
             ]
         # Store launch and landing point.
         x_points = [x[0], x[-1]]
@@ -108,34 +117,21 @@ class Probe:
                 label, 
                 fontsize=10, color='black')
         # Set plot styles.
-        ax.set_xlabel('x Distance (m)', alpha=0.5)
-        ax.set_ylabel('y Distance (m)', alpha=0.5)
-        ax.set_zlabel('z Altitude (m)', alpha=0.5)
+        if self.max_x_displacement < 1000000:
+            ax.set_xlabel('x Distance (m)', alpha=0.5)
+        else:
+            ax.set_xlabel('x Distance (km)', alpha=0.5)
+        if self.max_y_displacement < 1000000:
+            ax.set_ylabel('y Distance (m)', alpha=0.5)
+        else:
+            ax.set_ylabel('y Distance (km)', alpha=0.5)
+        if self.max_z_displcaement < 1000000:
+            ax.set_zlabel('z Altitude (m)', alpha=0.5)
+        else:
+            ax.set_zlabel('z Distance (km)', alpha=0.5)
         ax.set_title('3D Projectile Motion')
         ax.tick_params(axis='both', colors=(0, 0, 0, 0.5))
         ax.legend()
         ax.grid(True)
 
         plt.show()
-
-def main():
-    # Create an object from the Probe class
-    my_probe = Probe()
-
-    # User inputs probe variables
-    # my_probe.mass = input('Probe mass: ')
-    # my_probe.dimension_x = input('Probe size (x): ')
-    # my_probe.dimension_y = input('Probe size (y): ')
-    # my_probe.dimension_z = input('Probe size (z): ')
-
-    # Launch probe
-    x_values, y_values, z_values = my_probe.launch()
-    my_probe.plot(x_values, y_values, z_values)
-    
-    # Display intial velocities
-    # print(f'Vx: {my_probe.velocity_x_initial}')
-    # print(f'Vy: {my_probe.velocity_y_initial}')
-    # print(f'Vz: {my_probe.velocity_z_initial}')
-
-if __name__ == '__main__':
-    main()
