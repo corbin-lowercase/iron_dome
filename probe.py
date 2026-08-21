@@ -1,4 +1,4 @@
-# The Probe class describes a probe's characteristics, heading, and position.
+# The Projectile class describes an object's characteristics, heading, and position.
 
 # Positive x is east, negative x is west.
 # Positive y is north, negative y is south.
@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-class Probe:
+class Projectile:
 
     GRAVITY = 9.81
 
@@ -26,12 +26,12 @@ class Probe:
         self.position_y = 0
         self.position_z = 0
 
-    # The launch method launches the probe at a random trajectory.
+    # The launch method launches the projectile at a random trajectory.
     def launch(self):
         # Randomly generate the velocity components.
-        self.velocity_x_initial = random.uniform(-100000, 100000)
-        self.velocity_y_initial = random.uniform(-100000, 100000)
-        self.velocity_z_initial = random.uniform(1000, 10000)
+        self.velocity_x_initial = random.uniform(-1000, 1000)
+        self.velocity_y_initial = random.uniform(-1000, 1000)
+        self.velocity_z_initial = random.uniform(100, 1000)
 
         # Calculate magnitude of velocity vector.
         self.velocity_initial = math.hypot(self.velocity_x_initial,
@@ -75,6 +75,8 @@ class Probe:
 
         return x, y, z
 
+    # The plot method takes return values from launch method and plots
+    # the projectile's trajectory in 3D space.
     def plot(self, x, y, z):
 
         # Plot the 3D path.
@@ -82,6 +84,17 @@ class Probe:
         # 111 means 1 row in the grid, 1 column in the grid, and the
         # index(1) of subplot being activated.
         ax = fig.add_subplot(111, projection='3d')
+
+        # Convert from m to km if displacement is sufficiently large.
+        if any(d >= 1000 for d in (
+            self.max_x_displacement,
+            self.max_y_displacement,
+            self.max_z_displcaement
+            )
+        ):
+            x = x / 1000
+            y = y / 1000
+            z = z / 1000
 
         # Graph the trajectory and plot launch point and landing point.
         ax.plot(x, y, z, label='Trajectory', color='crimson', lw=1.5, alpha=0.5)
@@ -95,11 +108,9 @@ class Probe:
         )
 
         # Set labels and adjust styling of plots.
-        if self.max_x_displacement >= 1000000:
-            
         labels = [
-            f'({round(x[0], 2):,}, {round(y[0], 2):,}, {round(z[0], 2):,})',
-            f'({round(x[-1], 2):,}, {round(y[-1], 2):,}, {round(z[-1], 2):,})'
+            f'({round(x[0], 3):,}, {round(y[0], 3):,}, {round(z[0], 3):,})',
+            f'({round(x[-1], 3):,}, {round(y[-1], 3):,}, {round(z[-1], 3):,})'
             ]
         # Store launch and landing point.
         x_points = [x[0], x[-1]]
@@ -116,19 +127,23 @@ class Probe:
                 z_point + z[-1]/10, 
                 label, 
                 fontsize=10, color='black')
-        # Set plot styles.
-        if self.max_x_displacement < 1000000:
-            ax.set_xlabel('x Distance (m)', alpha=0.5)
-        else:
+            
+        # Set plot styles. Change units from m to km if displacement is
+        # sufficiently large.
+        if any(d >= 1000 for d in (
+            self.max_x_displacement,
+            self.max_y_displacement,
+            self.max_z_displcaement
+            )
+        ):
             ax.set_xlabel('x Distance (km)', alpha=0.5)
-        if self.max_y_displacement < 1000000:
-            ax.set_ylabel('y Distance (m)', alpha=0.5)
-        else:
             ax.set_ylabel('y Distance (km)', alpha=0.5)
-        if self.max_z_displcaement < 1000000:
-            ax.set_zlabel('z Altitude (m)', alpha=0.5)
-        else:
             ax.set_zlabel('z Distance (km)', alpha=0.5)
+        else:
+            ax.set_xlabel('x Distance (m)', alpha=0.5)
+            ax.set_ylabel('y Distance (m)', alpha=0.5)
+            ax.set_zlabel('z Altitude (m)', alpha=0.5)
+
         ax.set_title('3D Projectile Motion')
         ax.tick_params(axis='both', colors=(0, 0, 0, 0.5))
         ax.legend()

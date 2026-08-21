@@ -1,9 +1,9 @@
 # Demo for launching a probe on the planet Earth
-import probe
+import projectile
 
 def main():
     # Create an object from the Probe class
-    my_probe = probe.Probe()
+    my_projecitle = projectile.Projectile()
 
     # User inputs probe variables
     # my_probe.mass = input('Probe mass: ')
@@ -12,8 +12,8 @@ def main():
     # my_probe.dimension_z = input('Probe size (z): ')
 
     # Launch probe
-    x_values, y_values, z_values = my_probe.launch()
-    my_probe.plot(x_values, y_values, z_values)
+    x_values, y_values, z_values = my_projectile.launch()
+    my_projectile.plot(x_values, y_values, z_values)
 
     # Display intial velocities
     # print(f'Vx: {my_probe.velocity_x_initial}')
