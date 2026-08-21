@@ -64,20 +64,18 @@ class Projectile:
         # Calculate 3D trajectory for x, y, z. NumPy arrays are
         # calculated all at once for each variable.
         x_displacement = self.velocity_x_initial * time_steps
-        x = (self.position_x + x_displacement)
+        self.x = (self.position_x + x_displacement)
 
         y_displacement = self.velocity_y_initial * time_steps
-        y = (self.position_y + y_displacement)
+        self.y = (self.position_y + y_displacement)
 
         z_displacement = self.velocity_z_initial * time_steps
         z_displacement_gravity = 0.5 * self.GRAVITY * (time_steps)**2
-        z = abs(self.position_z + z_displacement - z_displacement_gravity)
-
-        return x, y, z
+        self.z = abs(self.position_z + z_displacement - z_displacement_gravity)
 
     # The plot method takes return values from launch method and plots
     # the projectile's trajectory in 3D space.
-    def plot(self, x, y, z):
+    def plot(self):
 
         # Plot the 3D path.
         fig = plt.figure(figsize=(7, 7))
@@ -92,9 +90,9 @@ class Projectile:
             self.max_z_displcaement
             )
         ):
-            x = x / 1000
-            y = y / 1000
-            z = z / 1000
+            x = self.x / 1000
+            y = self.y / 1000
+            z = self.z / 1000
 
         # Graph the trajectory and plot launch point and landing point.
         ax.plot(x, y, z, label='Trajectory', color='crimson', lw=1.5, alpha=0.5)
