@@ -34,9 +34,10 @@ class Projectile:
         # self.velocity_z_initial = random.uniform(100, 1000)
 
         ### For testing with smaller values
-        self.velocity_x_initial = random.uniform(-1, 1)
-        self.velocity_y_initial = random.uniform(-1, 1)
-        self.velocity_z_initial = random.uniform(1, 10)
+        self.velocity_x_initial = 10
+        self.velocity_y_initial = 15
+        self.velocity_z_initial = 5
+
         # Calculate magnitude of velocity vector.
         self.velocity_initial = math.hypot(self.velocity_x_initial,
                                           self.velocity_y_initial,
@@ -58,17 +59,17 @@ class Projectile:
         # Calculate the max x, y, and z displacement of the projectile.
         self.max_x_displacement = self.velocity_x_initial * flight_time
         self.max_y_displacement = self.velocity_y_initial * flight_time
-        self.max_z_displcaement = 0.5 * self.GRAVITY * (flight_time / 2)**2
+        self.max_z_displacement = 0.5 * self.GRAVITY * (flight_time / 2)**2
 
         # Calculate the apex of flight path.
         self.apex = (
             self.max_x_displacement / 2,
             self.max_y_displacement / 2,
-            self.max_z_displcaement
+            self.max_z_displacement
             )
         
         # Generate the time steps with dt=0.05 and append last step.
-        time_steps = np.arange(0, flight_time, 0.01)
+        time_steps = np.arange(0, flight_time, 0.05)
         time_steps = np.append(time_steps, flight_time)
 
         # Calculate 3D positional coordinates for x, y, z. 
@@ -102,7 +103,7 @@ class Projectile:
         if any(d >= 1000 for d in (
             self.max_x_displacement,
             self.max_y_displacement,
-            self.max_z_displcaement
+            self.max_z_displacement
             )
         ):
             x = self.x / 1000
@@ -139,19 +140,16 @@ class Projectile:
         y_intitial = f'{round(y[0], 3):,}'
         z_intitial = f'{round(z[0], 3):,}'
         labels = [
-            f'({round(x[0], 3):,}, {round(y[0], 3):,}, {round(z[0], 3):,})',
-            f'({round(x[-1], 3):,}, {round(y[-1], 3):,}, {round(z[-1], 3):,})',
-            f'(
-            {round(apex[0], 3):,}, 
-            {round(apex[1], 3):,}, 
-            {round(apex[0], 3):,},)
-            ']
+            f"({x[0]:,.3f}, {y[0]:,.3f}, {z[0]:,.3f})",
+            f"({x[-1]:,.3f}, {y[-1]:,.3f}, {z[-1]:,.3f})",
+            f"({apex[0]:,.3f}, {apex[1]:,.3f}, {apex[2]:,.3f})",
+        ]
         
         # Store launch point, landing point, and apex.
         x_points = [x[0], x[-1], apex[0]]
         y_points = [y[0], y[-1], apex[1]]
         z_points = [z[0], z[-1], apex[2]]
-        print(x_points)
+
         # Loop through launch and landing point to label them on plot.
         for x_point, y_point, z_point, label in zip(
             x_points, y_points, z_points, labels
@@ -169,7 +167,7 @@ class Projectile:
         if any(d >= 1000 for d in (
             self.max_x_displacement,
             self.max_y_displacement,
-            self.max_z_displcaement
+            self.max_z_displacement
             )
         ):
             ax.set_xlabel('x Distance (km)', alpha=0.5)

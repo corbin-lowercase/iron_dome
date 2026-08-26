@@ -13,7 +13,8 @@ def main():
 
     # Launch probe
     my_projectile.launch()
-    print(my_projectile.projectile_coords)
+    print(f'[x pos   y pos   z pos   flight time]\n'
+          f'{my_projectile.projectile_coords}')
     my_projectile.plot()
 
     # Display intial velocities
