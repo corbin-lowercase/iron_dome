@@ -12,11 +12,14 @@ def main():
     # my_probe.dimension_z = input('Probe size (z): ')
 
     # Launch probe
-    my_projectile.launch()
-    print(f'[x pos   y pos   z pos   flight time]\n'
-          f'{my_projectile.projectile_coords}')
-    
-    my_projectile.plot()
+    my_projectile.random_launch()
+    try:
+        print(f'[x pos   y pos   z pos   flight time]\n'
+            f'{my_projectile.projectile_coords}')
+        my_projectile.plot()
+    except Exception as exception:
+        print(exception)
+
 
     # Display intial velocities
     # print(f'Vx: {my_probe.velocity_x_initial}')

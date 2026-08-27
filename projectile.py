@@ -24,51 +24,44 @@ class Projectile:
         self.dimension_z = 0
 
         self.position_x_initial = random.uniform(-1000, 1000)
-        self.position_y_initial = random.uniform(-1000, 1000)
-        self.position_z_initial = random.uniform(0, 1000)
+        self.position_y_initial = random.uniform(0, 1000)
+        self.position_z_initial = random.uniform(-1000, 1000)
 
         self.position_x_final = 0
         self.position_y_final = 0
         self.position_z_final = 0
 
     # The launch method launches the projectile at a random trajectory.
-    def launch(self):
+    def random_launch(self):
         # Randomly generate the velocity components.
         self.velocity_x_initial = random.uniform(-1000, 1000)
-        self.velocity_y_initial = random.uniform(-1000, 1000)
-        self.velocity_z_initial = random.uniform(100, 1000)
-
-        # ### For testing with smaller values
-        # self.velocity_x_initial = 5
-        # self.velocity_y_initial = 5
-        # self.velocity_z_initial = 5
-
+        self.velocity_y_initial = random.uniform(100, 1000)
+        self.velocity_z_initial = random.uniform(-1000, 1000)
+        
         # Calculate magnitude of velocity vector.
         self.velocity_initial = math.hypot(self.velocity_x_initial,
                                           self.velocity_y_initial,
                                           self.velocity_z_initial) 
 
         # Calculate the angle theta above the horizontal.
-        self.launch_angle_theta = math.acos(self.velocity_z_initial 
+        self.launch_angle_theta = math.acos(self.velocity_y_initial 
                                             / self.velocity_initial)
 
         # Calculate the angle phi on the horizontal.
-        self.launch_angle_phi = math.atan2(self.velocity_y_initial, 
+        self.launch_angle_phi = math.atan2(self.velocity_z_initial, 
                                            self.velocity_x_initial)
 
-        # # Calculate the total flight time from launch to landing.
-        # This flight time cannot account for different z pos initial.
-        # self.flight_time = (2 * self.velocity_z_initial) / self.GRAVITY
-        # flight_time = self.flight_time
-        
-
-        # Calculate the total flight time a different way. This should
-        # allow projectile to launch from any height.
-        z_vel = self.velocity_z_initial
-        delta_z = self.position_z_initial - self.position_z_final
-        z_dis = 2 * self.GRAVITY * (delta_z)
-        discriminant = (z_vel**2) + z_dis
-        self.flight_time = (z_vel + math.sqrt(discriminant)) / self.GRAVITY
+        # Calculate the total flight time.
+        y_vel = self.velocity_y_initial
+        delta_y = self.position_y_initial - self.position_y_final
+        y_dis = 2 * self.GRAVITY * (delta_y)
+        discriminant = (y_vel**2) + y_dis
+        # Prevent imaginary numbers.
+        try:
+            self.flight_time = (y_vel + math.sqrt(discriminant)) / self.GRAVITY
+        except ValueError:
+            print('Discriminant is negative.')
+            return
         flight_time = self.flight_time
         print(f'Flight time: {round(flight_time, 2)} seconds')
 
@@ -77,27 +70,26 @@ class Projectile:
             self.position_x_initial
             + self.velocity_x_initial * flight_time
         )
-        self.max_y_displacement = (
-            self.position_y_initial
-            + self.velocity_y_initial * flight_time
+        self.max_z_displacement = (
+            self.position_z_initial
+            + self.velocity_z_initial * flight_time
         )
 
         # Calculate the max z displacement of the projectile.
-        time_to_apex = z_vel / self.GRAVITY
-        # self.max_z_displacement = 0.5 * self.GRAVITY * (flight_time / 2)**2
-        self.max_z_displacement = (
-            self.position_z_initial
-            + (z_vel * time_to_apex)
+        time_to_apex = y_vel / self.GRAVITY
+        self.max_y_displacement = (
+            self.position_y_initial
+            + (y_vel * time_to_apex)
             - (0.5 * self.GRAVITY * (time_to_apex)**2)
         )
 
         # Calculate the apex of flight path.
         x_vel = self.velocity_x_initial
-        y_vel = self.velocity_y_initial
+        z_vel = self.velocity_z_initial
         self.apex = (
             self.position_x_initial + x_vel * time_to_apex,
-            self.position_y_initial + y_vel * time_to_apex,
-            self.max_z_displacement
+            self.max_y_displacement,
+            self.position_z_initial + z_vel * time_to_apex
             )
         
         # Generate the time steps with dt=0.05 and append last step.
@@ -110,11 +102,11 @@ class Projectile:
         self.x = (self.position_x_initial + x_displacement)
 
         y_displacement = self.velocity_y_initial * time_steps
-        self.y = (self.position_y_initial + y_displacement)
+        y_displacement_gravity = 0.5 * self.GRAVITY * (time_steps)**2
+        self.y = abs(self.position_y_initial + y_displacement - y_displacement_gravity)
 
         z_displacement = self.velocity_z_initial * time_steps
-        z_displacement_gravity = 0.5 * self.GRAVITY * (time_steps)**2
-        self.z = abs(self.position_z_initial + z_displacement - z_displacement_gravity)
+        self.z = (self.position_z_initial + z_displacement)
 
         # Combine 1D positional arrays with dt array.
         self.projectile_coords = np.column_stack(
@@ -167,6 +159,8 @@ class Projectile:
             label='Apex'
         )
 
+        ax.view_init(elev=30, azim=150, vertical_axis='y')
+
         # Set labels and adjust styling of plots.
         x_intitial = f'{round(x[0], 3):,}'
         y_intitial = f'{round(y[0], 3):,}'
@@ -204,12 +198,12 @@ class Projectile:
             )
         ):
             ax.set_xlabel('x Distance (km)', alpha=0.5)
-            ax.set_ylabel('y Distance (km)', alpha=0.5)
+            ax.set_ylabel('y Altitude (km)', alpha=0.5)
             ax.set_zlabel('z Distance (km)', alpha=0.5)
         else:
             ax.set_xlabel('x Distance (m)', alpha=0.5)
-            ax.set_ylabel('y Distance (m)', alpha=0.5)
-            ax.set_zlabel('z Altitude (m)', alpha=0.5)
+            ax.set_ylabel('y Altitude (m)', alpha=0.5)
+            ax.set_zlabel('z Distance (m)', alpha=0.5)
 
         ax.set_title('3D Projectile Motion')
         ax.tick_params(axis='both', colors=(0, 0, 0, 0.5))
