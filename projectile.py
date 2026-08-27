@@ -22,9 +22,13 @@ class Projectile:
         self.dimension_y = 0
         self.dimension_z = 0
 
-        self.position_x = 0
-        self.position_y = 0
-        self.position_z = 0
+        self.position_x_initial = 0
+        self.position_y_initial = 0
+        self.position_z_initial = 5
+
+        self.position_x_final = 0
+        self.position_y_final = 0
+        self.position_z_final = 0
 
     # The launch method launches the projectile at a random trajectory.
     def launch(self):
@@ -34,8 +38,8 @@ class Projectile:
         # self.velocity_z_initial = random.uniform(100, 1000)
 
         ### For testing with smaller values
-        self.velocity_x_initial = 10
-        self.velocity_y_initial = 15
+        self.velocity_x_initial = 5
+        self.velocity_y_initial = 5
         self.velocity_z_initial = 5
 
         # Calculate magnitude of velocity vector.
@@ -56,6 +60,14 @@ class Projectile:
         flight_time = self.flight_time   
         print(f'Flight time: {round(flight_time, 2)} seconds')
 
+        # Calculate the total flight time a different way. This should
+        # allow projectile to launch from any height.
+        z_vel = self.velocity_z_initial
+        delta_z = self.position_z_initial - self.position_z_final
+        z_dis = 2 * self.GRAVITY * (delta_z)
+        discriminant = (z_vel**2) + z_dis
+        self.flight_time = (z_vel + math.sqrt(discriminant)) / self.GRAVITY
+
         # Calculate the max x, y, and z displacement of the projectile.
         self.max_x_displacement = self.velocity_x_initial * flight_time
         self.max_y_displacement = self.velocity_y_initial * flight_time
@@ -75,14 +87,14 @@ class Projectile:
         # Calculate 3D positional coordinates for x, y, z. 
         # NumPy arrays are calculated all at once for each variable.
         x_displacement = self.velocity_x_initial * time_steps
-        self.x = (self.position_x + x_displacement)
+        self.x = (self.position_x_initial + x_displacement)
 
         y_displacement = self.velocity_y_initial * time_steps
-        self.y = (self.position_y + y_displacement)
+        self.y = (self.position_y_initial + y_displacement)
 
         z_displacement = self.velocity_z_initial * time_steps
         z_displacement_gravity = 0.5 * self.GRAVITY * (time_steps)**2
-        self.z = abs(self.position_z + z_displacement - z_displacement_gravity)
+        self.z = abs(self.position_z_initial + z_displacement - z_displacement_gravity)
 
         # Combine 1D positional arrays with dt array.
         self.projectile_coords = np.column_stack(

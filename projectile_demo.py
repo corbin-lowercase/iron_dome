@@ -15,6 +15,7 @@ def main():
     my_projectile.launch()
     print(f'[x pos   y pos   z pos   flight time]\n'
           f'{my_projectile.projectile_coords}')
+    print(f'flight time recalc: {my_projectile.flight_time}')
     my_projectile.plot()
 
     # Display intial velocities
