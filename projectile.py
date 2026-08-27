@@ -22,9 +22,9 @@ class Projectile:
         self.dimension_y = 0
         self.dimension_z = 0
 
-        self.position_x_initial = 0
-        self.position_y_initial = 0
-        self.position_z_initial = 5
+        self.position_x_initial = 5
+        self.position_y_initial = 100
+        self.position_z_initial = 2
 
         self.position_x_final = 0
         self.position_y_final = 0
@@ -71,9 +71,15 @@ class Projectile:
         flight_time = self.flight_time
         print(f'Flight time: {round(flight_time, 2)} seconds')
 
-        # Calculate the max x, y displacement of the projectile.
-        self.max_x_displacement = self.velocity_x_initial * flight_time
-        self.max_y_displacement = self.velocity_y_initial * flight_time
+        # Calculate the max x and y displacement of the projectile.
+        self.max_x_displacement = (
+            self.position_x_initial
+            + self.velocity_x_initial * flight_time
+        )
+        self.max_y_displacement = (
+            self.position_y_initial
+            + self.velocity_y_initial * flight_time
+        )
 
         # Calculate the max z displacement of the projectile.
         time_to_apex = z_vel / self.GRAVITY
@@ -88,8 +94,8 @@ class Projectile:
         x_vel = self.velocity_x_initial
         y_vel = self.velocity_y_initial
         self.apex = (
-            x_vel * time_to_apex,
-            y_vel * time_to_apex,
+            self.position_x_initial + x_vel * time_to_apex,
+            self.position_y_initial + y_vel * time_to_apex,
             self.max_z_displacement
             )
         
@@ -179,11 +185,12 @@ class Projectile:
         for x_point, y_point, z_point, label in zip(
             x_points, y_points, z_points, labels
         ):
-            # This sets label position and style.
+            # This sets label position and style. Commented out code
+            # only works when point values are relatively similar.
             ax.text(
-                x_point + abs(x[-1]/20),  # After operator is offset.
-                y_point - y[-1]/10, 
-                z_point + z[-1]/10, 
+                x_point,# + abs(x[-1]/20),  # After operator is offset.
+                y_point,# - y[-1]/10, 
+                z_point,# + z[-1]/10, 
                 label, 
                 fontsize=10, color='black')
             
