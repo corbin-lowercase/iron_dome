@@ -24,7 +24,7 @@ class Projectile:
 
         self.position_x_initial = 0
         self.position_y_initial = 0
-        self.position_z_initial = 2
+        self.position_z_initial = 55
 
         self.position_x_final = 0
         self.position_y_final = 0
@@ -75,8 +75,14 @@ class Projectile:
         self.max_x_displacement = self.velocity_x_initial * flight_time
         self.max_y_displacement = self.velocity_y_initial * flight_time
 
-        # Calculate the max z displacement of the projectile
-        self.max_z_displacement = 0.5 * self.GRAVITY * (flight_time / 2)**2
+        # Calculate the max z displacement of the projectile.
+        time_to_apex = z_vel / self.GRAVITY
+        # self.max_z_displacement = 0.5 * self.GRAVITY * (flight_time / 2)**2
+        self.max_z_displacement = (
+            self.position_z_initial
+            + (z_vel * time_to_apex)
+            - (0.5 * self.GRAVITY * (time_to_apex)**2)
+        )
 
         # Calculate the apex of flight path.
         self.apex = (
@@ -84,6 +90,10 @@ class Projectile:
             self.max_y_displacement / 2,
             self.max_z_displacement
             )
+
+        self.apex_test = (
+            self.max_x_displacement
+        )
         
         # Generate the time steps with dt=0.05 and append last step.
         time_steps = np.arange(0, flight_time, 0.05)
