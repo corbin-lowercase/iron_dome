@@ -24,7 +24,7 @@ class Projectile:
 
         self.position_x_initial = 0
         self.position_y_initial = 0
-        self.position_z_initial = 5
+        self.position_z_initial = 2
 
         self.position_x_final = 0
         self.position_y_final = 0
@@ -55,10 +55,11 @@ class Projectile:
         self.launch_angle_phi = math.atan2(self.velocity_y_initial, 
                                            self.velocity_x_initial)
 
-        # Calculate the total flight time from launch to landing.
-        self.flight_time = (2 * self.velocity_z_initial) / self.GRAVITY
-        flight_time = self.flight_time   
-        print(f'Flight time: {round(flight_time, 2)} seconds')
+        # # Calculate the total flight time from launch to landing.
+        # This flight time cannot account for different z pos initial.
+        # self.flight_time = (2 * self.velocity_z_initial) / self.GRAVITY
+        # flight_time = self.flight_time
+        
 
         # Calculate the total flight time a different way. This should
         # allow projectile to launch from any height.
@@ -67,10 +68,14 @@ class Projectile:
         z_dis = 2 * self.GRAVITY * (delta_z)
         discriminant = (z_vel**2) + z_dis
         self.flight_time = (z_vel + math.sqrt(discriminant)) / self.GRAVITY
+        flight_time = self.flight_time
+        print(f'Flight time: {round(flight_time, 2)} seconds')
 
-        # Calculate the max x, y, and z displacement of the projectile.
+        # Calculate the max x, y displacement of the projectile.
         self.max_x_displacement = self.velocity_x_initial * flight_time
         self.max_y_displacement = self.velocity_y_initial * flight_time
+
+        # Calculate the max z displacement of the projectile
         self.max_z_displacement = 0.5 * self.GRAVITY * (flight_time / 2)**2
 
         # Calculate the apex of flight path.
