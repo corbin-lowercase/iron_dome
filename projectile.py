@@ -2,8 +2,8 @@
 # position.
 
 # Positive x is east, negative x is west.
-# Positive y is north, negative y is south.
-# Positive z is up, negative z is down.
+# Positive z is north, negative z is south.
+# Positive y is up, negative y is down.
 
 import random
 import math
@@ -28,7 +28,7 @@ class Projectile:
         self.position_z_initial = random.uniform(-1000, 1000)
 
         self.position_x_final = 0
-        self.position_y_final = 0
+        self.position_y_final = 0 # Change to desired landing height.
         self.position_z_final = 0
 
     # The launch method launches the projectile at a random trajectory.
