@@ -1,4 +1,5 @@
-# The Projectile class describes an object's characteristics, heading, and position.
+# The Projectile class describes an object's characteristics, heading, and 
+# position.
 
 # Positive x is east, negative x is west.
 # Positive y is north, negative y is south.
