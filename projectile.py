@@ -16,7 +16,7 @@ class Projectile:
     GRAVITY = 9.81  # m/s^2
 
     # Initialize mass, dimensions, and position with values of 0.
-    def __init__(self, x0, y0, z0):
+    def __init__(self, *, x0, y0, z0, vx0=0, vy0=0, vz0=0):
         # self.mass = 0
         # self.dimension_x = 0
         # self.dimension_y = 0
@@ -25,16 +25,22 @@ class Projectile:
         self.position_x_initial = x0
         self.position_y_initial = y0
         self.position_z_initial = z0
+        self.velocity_x_initial = vx0
+        self.velocity_y_initial = vy0
+        self.velocity_z_initial = vz0
+
 
     # The launch method launches the projectile at a random trajectory.
     def launch_random(self):
-        # Randomly generate the initial position
-        self.position_x_initial = random.uniform(-1000, 1000)
-        self.position_y_initial = random.uniform(0, 1000)
-        self.position_z_initial = random.uniform(-1000, 1000)
+        # Randomly generate the initial position - Removed because want
+        # to set pass positions as parameters to methods.
+        # self.position_x_initial = random.uniform(-1000, 1000)
+        # self.position_y_initial = random.uniform(0, 1000)
+        # self.position_z_initial = random.uniform(-1000, 1000)
 
         # Set desired landing height.
-        self.position_y_final = 0
+        # self.position_y_final = 0  # Don't really need, could calc
+        # x, z pos at any desired y if needed.
 
         # Randomly generate the velocity components.
         self.velocity_x_initial = random.uniform(-1000, 1000)
@@ -56,7 +62,7 @@ class Projectile:
 
         # Calculate the total flight time.
         y_vel = self.velocity_y_initial
-        delta_y = self.position_y_initial - self.position_y_final
+        delta_y = self.position_y_initial  # - self.position_y_final
         y_dis = 2 * self.GRAVITY * (delta_y)
         discriminant = (y_vel**2) + y_dis
         # Prevent imaginary numbers.
@@ -162,7 +168,7 @@ class Projectile:
             label='Apex'
         )
 
-        ax.view_init(elev=30, azim=150, vertical_axis='y')
+        ax.view_init(elev=15, azim=150, vertical_axis='y')
 
         # Set labels and adjust styling of plots.
         x_intitial = f'{round(x[0], 3):,}'

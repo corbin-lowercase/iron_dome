@@ -1,9 +1,13 @@
 # Demo for launching a probe on the planet Earth
+import random
+
 import projectile
+
+
 
 def main():
     # Create an object from the Probe class
-    my_projectile = projectile.Projectile(0, 0, 0)
+    my_projectile = projectile.Projectile(x0=0, y0=0, z0=0)
 
     # User inputs probe variables
     # my_probe.mass = input('Probe mass: ')
