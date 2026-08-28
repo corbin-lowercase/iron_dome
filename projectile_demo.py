@@ -3,7 +3,7 @@ import projectile
 
 def main():
     # Create an object from the Probe class
-    my_projectile = projectile.Projectile()
+    my_projectile = projectile.Projectile(0, 0, 0)
 
     # User inputs probe variables
     # my_probe.mass = input('Probe mass: ')
@@ -12,8 +12,8 @@ def main():
     # my_probe.dimension_z = input('Probe size (z): ')
 
     # Launch probe
-    my_projectile.random_launch()
     try:
+        my_projectile.launch_random()
         print(f'[x pos   y pos   z pos   flight time]\n'
             f'{my_projectile.projectile_coords}')
         my_projectile.plot()

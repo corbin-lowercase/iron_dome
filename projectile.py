@@ -13,26 +13,29 @@ import matplotlib.pyplot as plt
 
 
 class Projectile:
-
-    GRAVITY = 9.81
+    GRAVITY = 9.81  # m/s^2
 
     # Initialize mass, dimensions, and position with values of 0.
-    def __init__(self):
-        self.mass = 0
-        self.dimension_x = 0
-        self.dimension_y = 0
-        self.dimension_z = 0
+    def __init__(self, x0, y0, z0):
+        # self.mass = 0
+        # self.dimension_x = 0
+        # self.dimension_y = 0
+        # self.dimension_z = 0
 
+        self.position_x_initial = x0
+        self.position_y_initial = y0
+        self.position_z_initial = z0
+
+    # The launch method launches the projectile at a random trajectory.
+    def launch_random(self):
+        # Randomly generate the initial position
         self.position_x_initial = random.uniform(-1000, 1000)
         self.position_y_initial = random.uniform(0, 1000)
         self.position_z_initial = random.uniform(-1000, 1000)
 
-        self.position_x_final = 0
-        self.position_y_final = 0 # Change to desired landing height.
-        self.position_z_final = 0
+        # Set desired landing height.
+        self.position_y_final = 0
 
-    # The launch method launches the projectile at a random trajectory.
-    def random_launch(self):
         # Randomly generate the velocity components.
         self.velocity_x_initial = random.uniform(-1000, 1000)
         self.velocity_y_initial = random.uniform(100, 1000)
@@ -113,7 +116,7 @@ class Projectile:
             (self.x, self.y, self.z, time_steps)
         )
 
-    # The plot method takes return values from launch method and plots
+    # The plot method takes values from launch method and plots
     # the projectile's trajectory in 3D space.
     def plot(self):
 
@@ -211,3 +214,13 @@ class Projectile:
         ax.grid(True)
 
         plt.show()
+
+class ProjectileThreat(Projectile):
+    def __init__(self, position_x_final, position_y_final, position_z_final):
+        super().__init__()
+        self.position_x_final = 0
+        self.position_y_final = 0
+        self.position_z_final = 0
+
+    def launch(self):
+        None
