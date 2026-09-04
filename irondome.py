@@ -16,11 +16,14 @@ import matplotlib.pyplot as plt
 
 
 class Vector3:
-    """This handles position/velocity/trajectory math."""
+    """This handles position/velocity/trajectory math.
+    
+    Methods are Python operator overloads: allow simple vector
+    operations without having to add .x and .z fields
+    """
 
-    def __init__(self, x, y, z, vx, vy, vz):
+    def __init__(self, x, y, z):
         self.x, self.y, self.z = x, y, z
-        self.vx, self.vy, self.vz = vx, vy, vz
 
     def __add__(self, other):
         # Operator overloading to allow simple vector addition
@@ -39,17 +42,29 @@ class Vector3:
         return self.__mul__(scalar)
 
     def magnitude(self):
-        return math.sqrt(self.x**2 + self.y**2)
+        return math.sqrt(self.x**2 + self.y**2 + self.z**2)
 
     def __repr__(self):
         return f'Vector3({self.x:.2f}, {self.y:.2f}, {self.z:.2f})'
 
+class Environment:
+    """"""
+    def __init__(self, gravity=9.81):
+        self.gravity = Vector3(0, -gravity, 0)
+
 class Projectile:
     """This possesses 3D motion behavior."""
 
-    def __init__(self):
-        pass
-    
+    def __init__(self, position_object: Vector3, velocity_object: Vector3):
+        self.position = position_object
+        self.velocity = velocity_object
+
+    def update(self, dt=0.01, gravity=-9.81):  # seconds, m/s^2
+        self.velocity = self.velocity + gravity * dt        
+        self.position = self.position + self.velocity * dt
+
+
+
 class Threat(Projectile):
     """This is an extension of the Projectile object.
     
