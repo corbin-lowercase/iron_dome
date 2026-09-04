@@ -18,8 +18,8 @@ def main():
     # Launch probe
     try:
         my_projectile.launch_random()
-        print(f'[x pos   y pos   z pos   flight time]\n'
-            f'{my_projectile.projectile_coords}')
+        # print(f'[x pos   y pos   z pos   flight time]\n'
+        #     f'{my_projectile.projectile_coords}')
         my_projectile.plot()
     except Exception as exception:
         print(exception)
