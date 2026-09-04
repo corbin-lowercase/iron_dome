@@ -8,8 +8,8 @@ detonates in close proximity to eliminate the threat. Designed in 3D.
 
 __author__ = 'Corbin Eckles'
 
-import random
 import math
+import random
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,9 +18,38 @@ import matplotlib.pyplot as plt
 class Vector3:
     """This handles position/velocity/trajectory math."""
 
+    def __init__(self, x, y, z, vx, vy, vz):
+        self.x, self.y, self.z = x, y, z
+        self.vx, self.vy, self.vz = vx, vy, vz
+
+    def __add__(self, other):
+        # Operator overloading to allow simple vector addition
+        # (v1 + v2) without having to add .x and .y fields.
+        return Vector3(self.x + other.x, self.y + other.y, self.z + other.z)
+
+    def __sub__(self, other):
+        return Vector3(self.x - other.x, self.y - other.y, self.z - other.z)
+
+    def __mul__(self, scalar):
+        # Allows vector * scalar operation.
+        return Vector3(self.x * scalar, self.y * scalar, self.z * scalar)
+
+    def __rmul__ (self, scalar):
+        # Allows scalar * vector operation.
+        return self.__mul__(scalar)
+
+    def magnitude(self):
+        return math.sqrt(self.x**2 + self.y**2)
+
+    def __repr__(self):
+        return f'Vector3({self.x:.2f}, {self.y:.2f}, {self.z:.2f})'
+
 class Projectile:
     """This possesses 3D motion behavior."""
 
+    def __init__(self):
+        pass
+    
 class Threat(Projectile):
     """This is an extension of the Projectile object.
     
@@ -28,6 +57,9 @@ class Threat(Projectile):
     TrajectoryCalculator assigns it.
     """
 
+    def __init__(self):
+        pass
+    
 class Interceptor(Projectile):
     """This is an extension of the Projectile object.
 
@@ -36,35 +68,62 @@ class Interceptor(Projectile):
     checks its proximity to its target each tick.
     """
 
+    def __init__(self):
+        pass
+    
 class Radar:
     """This detects Projectile objects with spherical readings."""
 
+    def __init__(self):
+        pass
+    
 class ThreatDetector:
     """This converts raw data from Radar into Cartesian coordinates.
     It builds Threat objects.
     """
+    
+    def __init__(self):
+        pass
 
 class TrajectoryCalculator:
     """This computes and assigns trajectory to a Threat object."""
+    
+    def __init__(self):
+        pass
 
 class DefenseZone:
     """Defines the area the IronDomeSystem covers and holds risk-weight
     interface.
     """
+    
+    def __init__(self):
+        pass
 
 class DomeZone:
     """A hemisphere shape that supports priority sub-areas."""
+    
+    def __init__(self):
+        pass
 
 class PolygonZone:
     """A future implementation to allow IronDomeSystem to defend
     any shape.
     """
+    
+    def __init__(self):
+        pass
 
 class RiskEvaluator:
     """This takes Threat and DefenseZone data to produce risk score."""
+    
+    def __init__(self):
+        pass
 
 class Launcher:
     """Constructs and launches Interceptor instances."""
+    
+    def __init__(self):
+        pass
 
 class IronDomeSystem:
     """Holds the main loop.
@@ -72,9 +131,9 @@ class IronDomeSystem:
     Tracks active Threats/Interceptors, pairs them, ranks risk,
     and decides launches.
     """
-
-
-
+    
+    def __init__(self):
+        pass
 
 class Projectile2:
     GRAVITY = 9.81  # m/s^2
