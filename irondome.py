@@ -1,9 +1,12 @@
-# The Projectile class describes an object's characteristics, heading, and 
-# position.
+"""Iron Dome Module.
 
-# Positive x is east, negative x is west.
-# Positive z is north, negative z is south.
-# Positive y is up, negative y is down.
+The Iron Dome identifies projectile threats via radar over a defense 
+zone, measures their direction/velocity, calculates trajectory, 
+assesses risk, and if risky enough, launches an interceptor that 
+detonates in close proximity to eliminate the threat. Designed in 3D.
+"""
+
+__author__ = 'Corbin Eckles'
 
 import random
 import math
@@ -12,7 +15,68 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+class Vector3:
+    """This handles position/velocity/trajectory math."""
+
 class Projectile:
+    """This possesses 3D motion behavior."""
+
+class Threat(Projectile):
+    """This is an extension of the Projectile object.
+    
+    The Threat object initially exists without a trajectory until the
+    TrajectoryCalculator assigns it.
+    """
+
+class Interceptor(Projectile):
+    """This is an extension of the Projectile object.
+
+    The Launcher creates the Interceptor object and is handed its
+    targets position each tick without storing it. The Interceptor
+    checks its proximity to its target each tick.
+    """
+
+class Radar:
+    """This detects Projectile objects with spherical readings."""
+
+class ThreatDetector:
+    """This converts raw data from Radar into Cartesian coordinates.
+    It builds Threat objects.
+    """
+
+class TrajectoryCalculator:
+    """This computes and assigns trajectory to a Threat object."""
+
+class DefenseZone:
+    """Defines the area the IronDomeSystem covers and holds risk-weight
+    interface.
+    """
+
+class DomeZone:
+    """A hemisphere shape that supports priority sub-areas."""
+
+class PolygonZone:
+    """A future implementation to allow IronDomeSystem to defend
+    any shape.
+    """
+
+class RiskEvaluator:
+    """This takes Threat and DefenseZone data to produce risk score."""
+
+class Launcher:
+    """Constructs and launches Interceptor instances."""
+
+class IronDomeSystem:
+    """Holds the main loop.
+    
+    Tracks active Threats/Interceptors, pairs them, ranks risk,
+    and decides launches.
+    """
+
+
+
+
+class Projectile2:
     GRAVITY = 9.81  # m/s^2
 
     # Initialize mass, dimensions, and position with values of 0.

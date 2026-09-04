@@ -7,7 +7,7 @@ import irondome
 
 def main():
     # Create an object from the Probe class
-    my_projectile = irondome.Projectile(x0=0, y0=0, z0=0)
+    my_projectile = irondome.Projectile2(x0=0, y0=0, z0=0)
 
     # User inputs probe variables
     # my_probe.mass = input('Probe mass: ')
