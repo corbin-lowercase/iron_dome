@@ -1,4 +1,4 @@
-# object-oriented-1
+# irondome.py
 
 Advanced implementations:
 	- Include air restistance and wind variables.
@@ -18,7 +18,7 @@ Advanced implementations:
 
 
 IRON DOME OOP DESIGN
-=============================
+=====================
 
 PROJECT DESCRIPTION
 --------------------

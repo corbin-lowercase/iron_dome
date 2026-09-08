@@ -48,7 +48,8 @@ class Vector3:
         return f'Vector3({self.x:.2f}, {self.y:.2f}, {self.z:.2f})'
 
 class Environment:
-    """"""
+    """Sets the value of gravity for the system."""
+    
     def __init__(self, gravity=9.81):
         self.gravity = Vector3(0, -gravity, 0)
 
@@ -59,11 +60,9 @@ class Projectile:
         self.position = position_object
         self.velocity = velocity_object
 
-    def update(self, dt=0.01, gravity=-9.81):  # seconds, m/s^2
-        self.velocity = self.velocity + gravity * dt        
+    def update(self, environment, dt):
+        self.velocity = self.velocity + environment.gravity * dt        
         self.position = self.position + self.velocity * dt
-
-
 
 class Threat(Projectile):
     """This is an extension of the Projectile object.
