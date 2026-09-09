@@ -66,7 +66,7 @@ class Projectile:
 
     def update(self, environment, dt):
         """IronDomeSystem calls update on each projecitle."""
-        
+
         self.velocity = self.velocity + environment.gravity * dt        
         self.position = self.position + self.velocity * dt
 
@@ -77,8 +77,8 @@ class Threat(Projectile):
     TrajectoryCalculator assigns trajectory.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, position_object: Vector3, velocity_object: Vector3):
+        super().__init__(position_object, velocity_object)
     
 class Interceptor(Projectile):
     """This is an extension of the Projectile object.
@@ -88,8 +88,11 @@ class Interceptor(Projectile):
     checks its proximity to its target each tick.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, position_object: Vector3, velocity_object: Vector3):
+        super().__init__(position_object, velocity_object)
+
+    def check_proximity():
+        return
     
 class Radar:
     """This detects Projectile objects with spherical readings."""
