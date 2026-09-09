@@ -65,6 +65,8 @@ class Projectile:
         self.velocity = velocity_object
 
     def update(self, environment, dt):
+        """IronDomeSystem calls update on each projecitle."""
+        
         self.velocity = self.velocity + environment.gravity * dt        
         self.position = self.position + self.velocity * dt
 
@@ -154,6 +156,8 @@ class IronDomeSystem:
         pass
 
 class Projectile2:
+    """This class is used to calculate the actual trajectory."""
+
     GRAVITY = 9.81  # m/s^2
 
     # Initialize mass, dimensions, and position with values of 0.
@@ -183,10 +187,10 @@ class Projectile2:
         # self.position_y_final = 0  # Don't really need, could calc
         # x, z pos at any desired y if needed.
 
-        # Randomly generate the velocity components.
-        self.velocity_x_initial = random.uniform(-1000, 1000)
-        self.velocity_y_initial = random.uniform(100, 1000)
-        self.velocity_z_initial = random.uniform(-1000, 1000)
+        # # Randomly generate the velocity components.
+        # self.velocity_x_initial = random.uniform(-1000, 1000)
+        # self.velocity_y_initial = random.uniform(100, 1000)
+        # self.velocity_z_initial = random.uniform(-1000, 1000)
         
         # Calculate magnitude of velocity vector.
         self.velocity_initial = math.hypot(self.velocity_x_initial,
@@ -361,13 +365,3 @@ class Projectile2:
         ax.grid(True)
 
         plt.show()
-
-class ProjectileThreat(Projectile):
-    def __init__(self, position_x_final, position_y_final, position_z_final):
-        super().__init__()
-        self.position_x_final = 0
-        self.position_y_final = 0
-        self.position_z_final = 0
-
-    def launch(self):
-        None
