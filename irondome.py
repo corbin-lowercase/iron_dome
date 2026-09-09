@@ -101,6 +101,27 @@ class Interceptor(Projectile):
             return True
         return False
 
+class ThreatSpawner():
+    """This spawns in a projectile object.
+    
+    The spawn point is on the boundary of Radar object's hemisphere.
+    Multiple overlapping Radar hemispheres are allowed.
+    """
+
+    def __init__(self, center: Vector3, radius):
+        self.spawn_list = []
+        self.radar_center = center
+        self.radar_radius = radius
+
+    def spawn(self):
+        # Model the hemisphere, account for shifted center at (h,k,l).
+        r = self.radar_radius
+        h = self.radar_center.x
+        k = self.radar_center.y
+        l = self.radar_center.z
+        discriminant = r**2 - (x - h)**2 - (z-l)**2
+        boundary = k + math.sqrt(discriminant)
+
 class Radar:
     """This detects Projectile objects with spherical readings."""
 

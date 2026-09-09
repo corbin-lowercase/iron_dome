@@ -30,7 +30,8 @@ proximity to eliminate the threat. Designed in 3D.
 
 PIPELINE
 --------
-
+ThreatSpawner
+  -> spawns a projectile object on the boundary of Radar hemisphere
 Radar
   -> raw spherical/polar sensor readings (range, azimuth, elevation, Doppler velocity)
 
