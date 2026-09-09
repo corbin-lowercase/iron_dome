@@ -8,7 +8,7 @@ import irondome
 def main():
 
     position = irondome.Vector3(0, 0, 0)
-    velocity = irondome.Vector3(1, 11, 1)
+    velocity = irondome.Vector3(1, 1, 1)
 
     env = irondome.Environment()
 

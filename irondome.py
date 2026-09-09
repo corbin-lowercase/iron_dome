@@ -1,9 +1,9 @@
 """Iron Dome Module.
 
-The Iron Dome identifies projectile threats via radar over a defense 
-zone, measures their direction/velocity, calculates trajectory, 
-assesses risk, and if risky enough, launches an interceptor that 
-detonates in close proximity to eliminate the threat. Designed in 3D.
+The Iron Dome identifies projectile threats via radar over a defense
+zone, measures their direction/velocity, calculates trajectory,
+assesses risk, and launches an interceptor that detonates in close
+proximity to eliminate the threat. Designed in 3D.
 """
 
 __author__ = 'Corbin Eckles'
@@ -16,29 +16,33 @@ import matplotlib.pyplot as plt
 
 
 class Vector3:
-    """This handles position/velocity/trajectory math.
+    """This handles position/velocity math for trajectory.
     
     Methods are Python operator overloads: allow simple vector
-    operations without having to add .x and .z fields
+    operations without having to add .x and .z fields.
     """
 
     def __init__(self, x, y, z):
+        """Vector components can be position or velocity.
+        
+        Negative x is west, positive x is east.
+        Negative y is down, positive y is up.
+        Negative z is south and positive z is north.
+        """
         self.x, self.y, self.z = x, y, z
 
     def __add__(self, other):
-        # Operator overloading to allow simple vector addition
-        # (v1 + v2) without having to add .x and .y fields.
         return Vector3(self.x + other.x, self.y + other.y, self.z + other.z)
 
     def __sub__(self, other):
         return Vector3(self.x - other.x, self.y - other.y, self.z - other.z)
 
     def __mul__(self, scalar):
-        # Allows vector * scalar operation.
+        # Enables vector * scalar operation.
         return Vector3(self.x * scalar, self.y * scalar, self.z * scalar)
 
     def __rmul__ (self, scalar):
-        # Allows scalar * vector operation.
+        # Enables scalar * vector operation.
         return self.__mul__(scalar)
 
     def magnitude(self):
@@ -48,13 +52,13 @@ class Vector3:
         return f'Vector3({self.x:.2f}, {self.y:.2f}, {self.z:.2f})'
 
 class Environment:
-    """Sets the value of gravity for the system."""
-    
+    """The Environment sets the value of gravity for the system."""
+
     def __init__(self, gravity=9.81):
         self.gravity = Vector3(0, -gravity, 0)
 
 class Projectile:
-    """This possesses 3D motion behavior."""
+    """The Projectile object possesses 3D motion behavior."""
 
     def __init__(self, position_object: Vector3, velocity_object: Vector3):
         self.position = position_object
@@ -68,7 +72,7 @@ class Threat(Projectile):
     """This is an extension of the Projectile object.
     
     The Threat object initially exists without a trajectory until the
-    TrajectoryCalculator assigns it.
+    TrajectoryCalculator assigns trajectory.
     """
 
     def __init__(self):
