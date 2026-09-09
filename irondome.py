@@ -60,13 +60,13 @@ class Environment:
 class Projectile:
     """The Projectile object possesses 3D motion behavior."""
 
-    def __init__(self, position_object: Vector3, velocity_object: Vector3):
-        self.position = position_object
-        self.velocity = velocity_object
+    def __init__(self, position: Vector3, velocity: Vector3):
+        self.position = position
+        self.velocity = velocity
 
     def update(self, environment, dt):
         """IronDomeSystem calls update on each projecitle."""
-
+        # Calculate velocity for current tick, then calculate position.
         self.velocity = self.velocity + environment.gravity * dt        
         self.position = self.position + self.velocity * dt
 
@@ -77,8 +77,8 @@ class Threat(Projectile):
     TrajectoryCalculator assigns trajectory.
     """
 
-    def __init__(self, position_object: Vector3, velocity_object: Vector3):
-        super().__init__(position_object, velocity_object)
+    def __init__(self, position: Vector3, velocity: Vector3):
+        super().__init__(position, velocity)
     
 class Interceptor(Projectile):
     """This is an extension of the Projectile object.
@@ -88,12 +88,19 @@ class Interceptor(Projectile):
     checks its proximity to its target each tick.
     """
 
-    def __init__(self, position_object: Vector3, velocity_object: Vector3):
-        super().__init__(position_object, velocity_object)
+    def __init__(self, position: Vector3, velocity: Vector3):
+        super().__init__(position, velocity)
 
-    def check_proximity():
-        return
-    
+    def check_proximity(self, threat: Threat):
+        distance = threat.position - self.position
+        if Vector3.magnitude(distance) <= 1: 
+            # Store values for future reference.
+            threat.destroyed = True
+            self.successful = True
+            # Immediately return True/False so caller doesn't re-check.
+            return True
+        return False
+
 class Radar:
     """This detects Projectile objects with spherical readings."""
 
