@@ -108,33 +108,60 @@ class ThreatSpawner():
     Multiple overlapping Radar hemispheres are allowed.
     """
 
-    def __init__(self, radcenter: Vector3, radradius):
+    def __init__(self):
         self.spawn_list = []
-        self.radar_center = radcenter
-        self.radar_radius = radradius
+        
+    def spawn(
+            self,
+            spawn_loc: Vector3,
+            def_zone_loc: Vector3,
+            def_zone_radius: int,
+            randomize: bool
+    ):
+        self.spawn_location = spawn_loc
+        self.def_zone_center = def_zone_loc
+        self.def_zone_radius = def_zone_radius
+        self.randomize = randomize
+        
+        if self.randomize:
+            # Select random angle and point outside defense zone.
+            azimuth = random.uniform(0, 2 * math.pi)
+            r = self.def_zone_radius * math.sqrt(random.uniform(0, 1))
+            r += 2 * self.def_zone_radius
+            # Find spawn point (x, z) outside the defense zone.
+            x = self.def_zone_center.x + r * math.cos(azimuth)
+            z = self.def_zone_center.z + r * math.sin(azimuth)
+            spawn_point = Vector3(x, 0, z)
 
-    def spawn(self):
-        # Select point on the radar's hemishphere. Elevation is angle
-        # above the horizontal, and azimuth is angle on the horizontal.
-        r = self.radar_radius
-        elevation = random.uniform(0, math.pi / 2)  # radians
-        azimuth = random.uniform(0, 2 * math.pi)  # radians
-        # The horizontal component of the elevation.
-        horizontal_radius = r * math.cos(elevation)
+            # Select random angle and point on the defense zone's radius.
+            azimuth = random.uniform(0, 2 * math.pi)
+            r = self.def_zone_radius * math.sqrt(random.uniform(0, 1))
+            # Find target point (x, z) inside the defense zone.
+            x = self.def_zone_center.x + r * math.cos(azimuth)
+            z = self.def_zone_center.z + r * math.sin(azimuth)
+            target_point = Vector3(x, 0, z)
 
-        x = horizontal_radius * math.cos(azimuth)
-        x += self.radar_center.x  # Shift the center.
+        # # Select point on the radar's hemishphere. Elevation is angle
+        # # above the horizontal, and azimuth is angle on the horizontal.
+        # r = self.radar_radius
+        # elevation = random.uniform(0, math.pi / 2)  # radians
+        # azimuth = random.uniform(0, math.pi * 2)  # radians
+        # # The horizontal component of the elevation.
+        # horizontal_radius = r * math.cos(elevation)
 
-        y = r * math.sin(elevation)
-        y += self.radar_center.y  # Shift the center.
+        # x = horizontal_radius * math.cos(azimuth)
+        # x += self.radar_center.x  # Shift the center.
 
-        z = horizontal_radius * math.sin(azimuth)
-        z += self.radar_center.z  # Shift the center.
+        # y = r * math.sin(elevation)
+        # y += self.radar_center.y  # Shift the center.
 
-        spawn_point = Vector3(x, y, z)
-        vy = random.uniform()
-        vx = random.uniform()
-        spawn_velocity = Vector3(vx, vy, vz)
+        # z = horizontal_radius * math.sin(azimuth)
+        # z += self.radar_center.z  # Shift the center.
+
+        # spawn_point = Vector3(x, y, z)
+        # vy = random.uniform()
+        # vx = random.uniform()
+        # spawn_velocity = Vector3(vx, vy, vz)
 
 class Radar:
     """This detects Projectile objects with spherical readings."""
@@ -159,10 +186,16 @@ class TrajectoryCalculator:
 class DefenseZone:
     """Defines the area the IronDomeSystem covers and holds risk-weight
     interface.
+
+    Center is the location of the defense zone's center. Default
+    defense radius is 100,000 meters.
     """
     
-    def __init__(self):
-        pass
+    def __init__(self, center: Vector3, radius=100000):
+        # Begin with a circular defense zone.
+        self.radius = radius
+        self.center = center
+
 
 class DomeZone:
     """A hemisphere shape that supports priority sub-areas."""
