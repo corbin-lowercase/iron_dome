@@ -108,19 +108,33 @@ class ThreatSpawner():
     Multiple overlapping Radar hemispheres are allowed.
     """
 
-    def __init__(self, center: Vector3, radius):
+    def __init__(self, radcenter: Vector3, radradius):
         self.spawn_list = []
-        self.radar_center = center
-        self.radar_radius = radius
+        self.radar_center = radcenter
+        self.radar_radius = radradius
 
     def spawn(self):
-        # Model the hemisphere, account for shifted center at (h,k,l).
+        # Select point on the radar's hemishphere. Elevation is angle
+        # above the horizontal, and azimuth is angle on the horizontal.
         r = self.radar_radius
-        h = self.radar_center.x
-        k = self.radar_center.y
-        l = self.radar_center.z
-        discriminant = r**2 - (x - h)**2 - (z-l)**2
-        boundary = k + math.sqrt(discriminant)
+        elevation = random.uniform(0, math.pi / 2)  # radians
+        azimuth = random.uniform(0, 2 * math.pi)  # radians
+        # The horizontal component of the elevation.
+        horizontal_radius = r * math.cos(elevation)
+
+        x = horizontal_radius * math.cos(azimuth)
+        x += self.radar_center.x  # Shift the center.
+
+        y = r * math.sin(elevation)
+        y += self.radar_center.y  # Shift the center.
+
+        z = horizontal_radius * math.sin(azimuth)
+        z += self.radar_center.z  # Shift the center.
+
+        spawn_point = Vector3(x, y, z)
+        vy = random.uniform()
+        vx = random.uniform()
+        spawn_velocity = Vector3(vx, vy, vz)
 
 class Radar:
     """This detects Projectile objects with spherical readings."""
