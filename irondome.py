@@ -64,7 +64,7 @@ class Projectile:
         self.position = position
         self.velocity = velocity
 
-    def update(self, environment, dt):
+    def update(self, environment: Environment, dt: float):
         """IronDomeSystem calls update on each projecitle."""
         # Calculate velocity for current tick, then calculate position.
         self.velocity = self.velocity + environment.gravity * dt        
@@ -79,7 +79,7 @@ class Threat(Projectile):
 
     def __init__(self, position: Vector3, velocity: Vector3):
         super().__init__(position, velocity)
-    
+
 class Interceptor(Projectile):
     """This is an extension of the Projectile object.
 
@@ -101,67 +101,83 @@ class Interceptor(Projectile):
             return True
         return False
 
-class ThreatSpawner():
+class ThreatSpawner:
     """This spawns in a projectile object.
     
-    The spawn point is on the boundary of Radar object's hemisphere.
-    Multiple overlapping Radar hemispheres are allowed.
+    The spawn point is randomly generated outside the defense zone with
+    a random scaled velocity directed at a target point.
     """
 
-    def __init__(self):
-        self.spawn_list = []
-        
-    def spawn(
-            self,
-            spawn_loc: Vector3,
+    def __init__(self,
             def_zone_loc: Vector3,
             def_zone_radius: int,
-            randomize: bool
+            environment: Environment
     ):
-        self.spawn_location = spawn_loc
         self.def_zone_center = def_zone_loc
         self.def_zone_radius = def_zone_radius
-        self.randomize = randomize
-        
-        if self.randomize:
-            # Select random angle and point outside defense zone.
-            azimuth = random.uniform(0, 2 * math.pi)
-            r = self.def_zone_radius * math.sqrt(random.uniform(0, 1))
-            r += 2 * self.def_zone_radius
-            # Find spawn point (x, z) outside the defense zone.
-            x = self.def_zone_center.x + r * math.cos(azimuth)
-            z = self.def_zone_center.z + r * math.sin(azimuth)
-            spawn_point = Vector3(x, 0, z)
+        self.env = environment
+        self.spawn_list = []
 
-            # Select random angle and point on the defense zone's radius.
-            azimuth = random.uniform(0, 2 * math.pi)
-            r = self.def_zone_radius * math.sqrt(random.uniform(0, 1))
-            # Find target point (x, z) inside the defense zone.
-            x = self.def_zone_center.x + r * math.cos(azimuth)
-            z = self.def_zone_center.z + r * math.sin(azimuth)
-            target_point = Vector3(x, 0, z)
+    def spawn(self):
 
-        # # Select point on the radar's hemishphere. Elevation is angle
-        # # above the horizontal, and azimuth is angle on the horizontal.
-        # r = self.radar_radius
-        # elevation = random.uniform(0, math.pi / 2)  # radians
-        # azimuth = random.uniform(0, math.pi * 2)  # radians
-        # # The horizontal component of the elevation.
-        # horizontal_radius = r * math.cos(elevation)
+         
+        # Select random angle and point outside defense zone.
+        azimuth = random.uniform(0, 2 * math.pi)
+        r = self.def_zone_radius * random.uniform(0, 1)
+        r += self.def_zone_radius  # Ensure that r is outside zone.
+        # Find spawn point (x, z) outside the defense zone.
+        x = self.def_zone_center.x + r * math.cos(azimuth)
+        z = self.def_zone_center.z + r * math.sin(azimuth)
+        spawn_point = Vector3(x, 0, z)
 
-        # x = horizontal_radius * math.cos(azimuth)
-        # x += self.radar_center.x  # Shift the center.
+        # Select random angle and point on the defense zone's radius.
+        azimuth = random.uniform(0, 2 * math.pi)
+        r = self.def_zone_radius * math.sqrt(random.uniform(0, 1))
+        # Find target point (x, z) inside the defense zone.
+        x = self.def_zone_center.x + r * math.cos(azimuth)
+        z = self.def_zone_center.z + r * math.sin(azimuth)
+        target_point = Vector3(x, 0, z)
 
-        # y = r * math.sin(elevation)
-        # y += self.radar_center.y  # Shift the center.
+        # Compute velocity vector going from spawn to target.
+        distance = target_point - spawn_point
+        # Projectile should have flight time between 30 and 60 seconds.
+        flight_time = random.uniform(30, 60)
+        vy0 = abs(flight_time * self.env.gravity.y / 2)
 
-        # z = horizontal_radius * math.sin(azimuth)
-        # z += self.radar_center.z  # Shift the center.
+        # Find corresponding velocity for x and z components.
+        vx0 = distance.x / flight_time
+        vz0 = distance.z / flight_time
 
-        # spawn_point = Vector3(x, y, z)
-        # vy = random.uniform()
-        # vx = random.uniform()
-        # spawn_velocity = Vector3(vx, vy, vz)
+        initial_velocity = Vector3(vx0, vy0, vz0)
+        # Construct a bare Projectile object.
+        spawned_projectile = Projectile(spawn_point, initial_velocity)
+        # Append Projectile object to spawn list.
+        self.spawn_list.append(spawned_projectile)
+
+
+class OldThreatSpawner:
+    # # Select point on the radar's hemishphere. Elevation is angle
+    # # above the horizontal, and azimuth is angle on the horizontal.
+    # r = self.radar_radius
+    # elevation = random.uniform(0, math.pi / 2)  # radians
+    # azimuth = random.uniform(0, math.pi * 2)  # radians
+    # # The horizontal component of the elevation.
+    # horizontal_radius = r * math.cos(elevation)
+
+    # x = horizontal_radius * math.cos(azimuth)
+    # x += self.radar_center.x  # Shift the center.
+
+    # y = r * math.sin(elevation)
+    # y += self.radar_center.y  # Shift the center.
+
+    # z = horizontal_radius * math.sin(azimuth)
+    # z += self.radar_center.z  # Shift the center.
+
+    # spawn_point = Vector3(x, y, z)
+    # vy = random.uniform()
+    # vx = random.uniform()
+    # spawn_velocity = Vector3(vx, vy, vz)
+    pass
 
 class Radar:
     """This detects Projectile objects with spherical readings."""
