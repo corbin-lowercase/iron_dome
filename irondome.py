@@ -118,19 +118,20 @@ class ThreatSpawner:
         self.env = environment
         self.spawn_list = []
 
-    def spawn(self):
-
+    def spawn_ballistic(self):
+        """When ballistic projectiles are launched, their trajectory is
+        influenced only by external forces."""
          
-        # Select random angle and point outside defense zone.
+        # Select random azimuth and point outside defense zone.
         azimuth = random.uniform(0, 2 * math.pi)
         r = self.def_zone_radius * random.uniform(0, 1)
-        r += self.def_zone_radius  # Ensure that r is outside zone.
+        r += self.def_zone_radius  # Ensure r is outside zone.
         # Find spawn point (x, z) outside the defense zone.
         x = self.def_zone_center.x + r * math.cos(azimuth)
         z = self.def_zone_center.z + r * math.sin(azimuth)
         spawn_point = Vector3(x, 0, z)
 
-        # Select random angle and point on the defense zone's radius.
+        # Select random azimuth and point on the defense zone's radius.
         azimuth = random.uniform(0, 2 * math.pi)
         r = self.def_zone_radius * math.sqrt(random.uniform(0, 1))
         # Find target point (x, z) inside the defense zone.
@@ -138,24 +139,26 @@ class ThreatSpawner:
         z = self.def_zone_center.z + r * math.sin(azimuth)
         target_point = Vector3(x, 0, z)
 
-        # Compute velocity vector going from spawn to target.
-        distance = target_point - spawn_point
-        # Projectile should have flight time between 30 and 60 seconds.
-        flight_time = random.uniform(30, 60)
-        vy0 = abs(flight_time * self.env.gravity.y / 2)
+        # Compute a random trajectory and find corresponding velocity.
+        launch_angle = random.uniform(math.pi / 6, math.pi / 3)  # rads
+        v0 = random.uniform(200, 1000)  # m/s
 
-        # Find corresponding velocity for x and z components.
+        # Compute initial velocity components.
+        vy0 = v0 * math.sin(launch_angle)
+        # Compute corresponding velocity for x and z components.
+        horizontal_speed = v0 * math.cos(launch_angle)
+        distance = target_point - spawn_point
+        distance.y = 0  # Want only the horizontal distance.
+        flight_time = Vector3.magnitude(distance) / horizontal_speed  # sec
         vx0 = distance.x / flight_time
         vz0 = distance.z / flight_time
-
         initial_velocity = Vector3(vx0, vy0, vz0)
-        # Construct a bare Projectile object.
+
+        # Construct a Projectile object and append to spawn list.
         spawned_projectile = Projectile(spawn_point, initial_velocity)
-        # Append Projectile object to spawn list.
         self.spawn_list.append(spawned_projectile)
 
-
-class OldThreatSpawner:
+class OldThreatSpawner:  # Hold onto now in case I need to reuse logic.
     # # Select point on the radar's hemishphere. Elevation is angle
     # # above the horizontal, and azimuth is angle on the horizontal.
     # r = self.radar_radius
