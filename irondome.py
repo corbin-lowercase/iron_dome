@@ -158,35 +158,31 @@ class ThreatSpawner:
         spawned_projectile = Projectile(spawn_point, initial_velocity)
         self.spawn_list.append(spawned_projectile)
 
-class OldThreatSpawner:  # Hold onto now in case I need to reuse logic.
-    # # Select point on the radar's hemishphere. Elevation is angle
-    # # above the horizontal, and azimuth is angle on the horizontal.
-    # r = self.radar_radius
-    # elevation = random.uniform(0, math.pi / 2)  # radians
-    # azimuth = random.uniform(0, math.pi * 2)  # radians
-    # # The horizontal component of the elevation.
-    # horizontal_radius = r * math.cos(elevation)
-
-    # x = horizontal_radius * math.cos(azimuth)
-    # x += self.radar_center.x  # Shift the center.
-
-    # y = r * math.sin(elevation)
-    # y += self.radar_center.y  # Shift the center.
-
-    # z = horizontal_radius * math.sin(azimuth)
-    # z += self.radar_center.z  # Shift the center.
-
-    # spawn_point = Vector3(x, y, z)
-    # vy = random.uniform()
-    # vx = random.uniform()
-    # spawn_velocity = Vector3(vx, vy, vz)
-    pass
-
 class Radar:
     """This detects Projectile objects with spherical readings."""
 
-    def __init__(self):
-        pass
+    def __init__(self,
+            radar_loc: Vector3,
+            radar_radius: int,
+            detect_chance=0.99
+    ):
+        self.center = radar_loc
+        self.radius = radar_radius
+        self.detect_chance = detect_chance
+        self.radar_readings = []
+
+    def scan(self, spawn_list: list[Projectile]):
+        # Compute projectile's distance from the radar's center and
+        # compare to the radar's detection radius.
+        for projectile in spawn_list:
+            displacement = projectile.position - self.center
+            distance = Vector3.magnitude(displacement)
+            if distance <= self.radius:
+                # Roll radar detection.
+                chance = round(random.uniform(0.0, 1.0), 2)
+                if self.detect_chance >= chance:
+                    # Detect projectile
+
     
 class ThreatDetector:
     """This converts raw data from Radar into Cartesian coordinates.
