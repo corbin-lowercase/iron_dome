@@ -164,14 +164,14 @@ class Radar:
     def __init__(self,
             radar_loc: Vector3,
             radar_radius: int,
-            detect_chance=0.99
+            detect_chance=0.99  # 99% chance of detection.
     ):
         self.center = radar_loc
         self.radius = radar_radius
         self.detect_chance = detect_chance
-        self.radar_readings = []
 
     def scan(self, spawn_list: list[Projectile]):
+        radar_readings = []
         # Compute projectile's distance from the radar's center and
         # compare to the radar's detection radius.
         for projectile in spawn_list:
@@ -181,8 +181,12 @@ class Radar:
                 # Roll radar detection.
                 chance = round(random.uniform(0.0, 1.0), 2)
                 if self.detect_chance >= chance:
-                    # Detect projectile
-
+                    # Detect projectile.
+                    azimuth = math.atan2(displacement.z, displacement.x)
+                    elevation = math.asin(displacement.y / distance)
+                    readings = (distance, azimuth, elevation)
+                    radar_readings.append(readings)
+        return radar_readings
     
 class ThreatDetector:
     """This converts raw data from Radar into Cartesian coordinates.
